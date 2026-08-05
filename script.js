@@ -23,7 +23,7 @@ const CARTAS = {
   3: {
     titulo: "Lo que viene",
     parrafos: [
-      "Quiero seguir llenando este álbum contigo: más viajes, más fotos torpes, más canciones que se vuelvan 'nuestras'.",
+      "Quiero seguir llenando este álbum contigo: más fotos torpes, más canciones que se vuelvan 'nuestras'.",
       "No tengo todas las respuestas sobre el futuro, pero sí tengo claro con quién quiero recorrerlo.",
       "Que esto sea solo el comienzo."
     ]
