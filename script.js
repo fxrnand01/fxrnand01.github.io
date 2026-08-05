@@ -32,6 +32,31 @@ const CARTAS = {
 
 
 // ==========================================================
+// ESTRELLAS DE FONDO
+// ==========================================================
+
+function crearEstrellas() {
+  const contenedor = document.getElementById("estrellas");
+  if (!contenedor) return;
+
+  const cantidad = window.innerWidth < 600 ? 40 : 80;
+  const frag = document.createDocumentFragment();
+
+  for (let i = 0; i < cantidad; i++) {
+    const estrella = document.createElement("span");
+    estrella.style.left = Math.random() * 100 + "vw";
+    estrella.style.top = Math.random() * 100 + "vh";
+    estrella.style.setProperty("--dur", `${3 + Math.random() * 4}s`);
+    estrella.style.setProperty("--delay", `-${Math.random() * 5}s`);
+    frag.appendChild(estrella);
+  }
+  contenedor.appendChild(frag);
+}
+
+crearEstrellas();
+
+
+// ==========================================================
 // PÉTALOS FLOTANTES
 // ==========================================================
 
@@ -69,7 +94,68 @@ crearPetalos();
 
 
 // ==========================================================
-// ABRIR ÁLBUM (scroll a galería + iniciar música)
+// REVEAL AL HACER SCROLL
+// ==========================================================
+
+function activarRevelado() {
+  const elementos = document.querySelectorAll(".reveal");
+  elementos.forEach((el, i) => el.style.setProperty("--i", i % 8));
+
+  if (!("IntersectionObserver" in window)) {
+    elementos.forEach((el) => el.classList.add("visible"));
+    return;
+  }
+
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      entradas.forEach((entrada) => {
+        if (entrada.isIntersecting) {
+          entrada.target.classList.add("visible");
+          observador.unobserve(entrada.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  elementos.forEach((el) => observador.observe(el));
+}
+
+activarRevelado();
+
+
+// ==========================================================
+// INTRO — SOBRE SELLADO
+// ==========================================================
+
+const intro = document.getElementById("intro");
+const sobre = document.getElementById("sobre");
+
+function abrirSobre() {
+  if (!sobre || sobre.classList.contains("abriendo")) return;
+  sobre.classList.add("abriendo");
+  iniciarMusica();
+
+  setTimeout(() => {
+    intro.classList.add("cerrado");
+    document.body.classList.remove("bloqueado");
+  }, 900);
+}
+
+if (sobre) {
+  document.body.classList.add("bloqueado");
+  sobre.addEventListener("click", abrirSobre);
+  sobre.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      abrirSobre();
+    }
+  });
+}
+
+
+// ==========================================================
+// ABRIR ÁLBUM (scroll a galería)
 // ==========================================================
 
 const abrirAlbum = document.getElementById("abrirAlbum");
@@ -77,7 +163,6 @@ const galeria = document.getElementById("galeria");
 
 if (abrirAlbum) {
   abrirAlbum.addEventListener("click", () => {
-    iniciarMusica();
     galeria.scrollIntoView({ behavior: "smooth" });
   });
 }
@@ -93,7 +178,7 @@ const secciones = ["portada", "galeria", "cancion", "cartas"]
   .filter(Boolean);
 
 if (secciones.length && puntos.length) {
-  const observador = new IntersectionObserver(
+  const observadorNav = new IntersectionObserver(
     (entradas) => {
       entradas.forEach((entrada) => {
         if (entrada.isIntersecting) {
@@ -106,7 +191,7 @@ if (secciones.length && puntos.length) {
     { threshold: 0.5 }
   );
 
-  secciones.forEach((s) => observador.observe(s));
+  secciones.forEach((s) => observadorNav.observe(s));
 }
 
 
@@ -124,6 +209,9 @@ const barraProgreso = document.getElementById("barraProgreso");
 const barraRelleno = document.getElementById("barraRelleno");
 const tiempoActual = document.getElementById("tiempoActual");
 const tiempoTotal = document.getElementById("tiempoTotal");
+const botonSonido = document.getElementById("botonSonido");
+const iconoSonidoOn = document.getElementById("iconoSonidoOn");
+const iconoSonidoOff = document.getElementById("iconoSonidoOff");
 
 function formatearTiempo(segundos) {
   if (!isFinite(segundos)) return "0:00";
@@ -179,24 +267,46 @@ if (playPause && musica) {
   });
 }
 
+if (botonSonido && musica) {
+  botonSonido.addEventListener("click", () => {
+    musica.muted = !musica.muted;
+    iconoSonidoOn.style.display = musica.muted ? "none" : "block";
+    iconoSonidoOff.style.display = musica.muted ? "block" : "none";
+  });
+}
+
 
 // ==========================================================
-// VISOR DE FOTOS
+// VISOR DE FOTOS (con navegación anterior / siguiente)
 // ==========================================================
 
-const fotos = document.querySelectorAll(".foto");
+const fotos = Array.from(document.querySelectorAll(".foto"));
 const visorFoto = document.getElementById("visorFoto");
 const visorImagen = document.getElementById("visorImagen");
 const visorTitulo = document.getElementById("visorTitulo");
 const visorTexto = document.getElementById("visorTexto");
+const visorContador = document.getElementById("visorContador");
 const cerrarVisorFoto = document.getElementById("cerrarVisorFoto");
+const fotoAnterior = document.getElementById("fotoAnterior");
+const fotoSiguiente = document.getElementById("fotoSiguiente");
 
-function abrirVisorFoto(foto) {
+let indiceFotoActual = 0;
+
+function mostrarFoto(indice) {
+  if (!fotos.length) return;
+  indiceFotoActual = (indice + fotos.length) % fotos.length;
+  const foto = fotos[indiceFotoActual];
   const img = foto.querySelector("img");
+
   visorImagen.style.display = foto.classList.contains("sin-imagen") ? "none" : "block";
   visorImagen.src = img ? img.src : "";
   visorTitulo.textContent = foto.dataset.titulo || "";
   visorTexto.textContent = foto.dataset.texto || "";
+  visorContador.textContent = `${indiceFotoActual + 1} / ${fotos.length}`;
+}
+
+function abrirVisorFoto(indice) {
+  mostrarFoto(indice);
   visorFoto.classList.add("abierto");
   visorFoto.setAttribute("aria-hidden", "false");
 }
@@ -208,13 +318,13 @@ function cerrarTodosLosVisores() {
   });
 }
 
-fotos.forEach((foto) => {
-  foto.addEventListener("click", () => abrirVisorFoto(foto));
+fotos.forEach((foto, indice) => {
+  foto.addEventListener("click", () => abrirVisorFoto(indice));
 });
 
-if (cerrarVisorFoto) {
-  cerrarVisorFoto.addEventListener("click", cerrarTodosLosVisores);
-}
+if (cerrarVisorFoto) cerrarVisorFoto.addEventListener("click", cerrarTodosLosVisores);
+if (fotoAnterior) fotoAnterior.addEventListener("click", () => mostrarFoto(indiceFotoActual - 1));
+if (fotoSiguiente) fotoSiguiente.addEventListener("click", () => mostrarFoto(indiceFotoActual + 1));
 
 
 // ==========================================================
@@ -240,13 +350,11 @@ cartas.forEach((carta) => {
   });
 });
 
-if (cerrarVisorCarta) {
-  cerrarVisorCarta.addEventListener("click", cerrarTodosLosVisores);
-}
+if (cerrarVisorCarta) cerrarVisorCarta.addEventListener("click", cerrarTodosLosVisores);
 
 
 // ==========================================================
-// CERRAR VISORES AL HACER CLIC AFUERA O CON ESC
+// CERRAR VISORES AL HACER CLIC AFUERA O CON ESC / FLECHAS
 // ==========================================================
 
 [visorFoto, visorCarta].forEach((visor) => {
@@ -258,4 +366,9 @@ if (cerrarVisorCarta) {
 
 document.addEventListener("keydown", (evento) => {
   if (evento.key === "Escape") cerrarTodosLosVisores();
+
+  if (visorFoto.classList.contains("abierto")) {
+    if (evento.key === "ArrowRight") mostrarFoto(indiceFotoActual + 1);
+    if (evento.key === "ArrowLeft") mostrarFoto(indiceFotoActual - 1);
+  }
 });

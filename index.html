@@ -1,247 +1,317 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Para el amor de mi vida</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060f24">
+<title>Para Camiwita</title>
 
-  <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%99%3C/text%3E%3C/svg%3E">
 
-  <link rel="stylesheet" href="style.css">
+<!-- Fuentes -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ==========================================
+     SVG SPRITE
+=========================================== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="lirio" viewBox="0 0 100 140">
+      <path d="M50 140 C 50 100 45 90 50 70" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M50 70 C 20 65 8 40 15 10 C 35 15 48 30 50 55 C 52 30 65 15 85 10 C 92 40 80 65 50 70Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M50 55 C 46 35 38 22 25 15" fill="none" stroke="currentColor" stroke-width="1"/>
+      <path d="M50 55 C 54 35 62 22 75 15" fill="none" stroke="currentColor" stroke-width="1"/>
+    </symbol>
+    <symbol id="petalo" viewBox="0 0 60 60">
+      <path d="M30 2 C 45 15 45 45 30 58 C 15 45 15 15 30 2Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="estrella4" viewBox="0 0 40 40">
+      <path d="M20 0 C 21 14 26 19 40 20 C 26 21 21 26 20 40 C 19 26 14 21 0 20 C 14 19 19 14 20 0Z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Fondo -->
+<div class="fondo"></div>
+<div class="estrellas" id="estrellas" aria-hidden="true"></div>
+<div id="petalos" class="petalos" aria-hidden="true"></div>
+<div class="vineta" aria-hidden="true"></div>
+
+<!-- Música -->
+<audio id="musica" src="musica.mp3" loop preload="metadata"></audio>
+
+<!-- ==========================================
+     INTRO — SOBRE SELLADO
+=========================================== -->
+<div id="intro" class="intro">
+  <div class="intro-estrellas" aria-hidden="true"></div>
+  <div class="intro-contenido">
+    <p class="intro-eyebrow">Tienes una carta</p>
+    <div class="sobre" id="sobre" role="button" tabindex="0" aria-label="Abrir el sobre">
+      <div class="sobre-sombra"></div>
+      <div class="sobre-cuerpo">
+        <div class="sobre-solapa"></div>
+        <div class="sobre-carta">
+          <svg viewBox="0 0 100 140" class="sobre-carta-lirio"><use href="#lirio"/></svg>
+          <span>Para Camiwita</span>
+        </div>
+        <div class="sobre-sello">
+          <svg width="30" height="30" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+        </div>
+      </div>
+    </div>
+    <p class="intro-pista">Toca el sello para abrirlo</p>
+  </div>
+</div>
+
+<!-- Navegación por puntos -->
+<nav class="nav-puntos" aria-label="Secciones del álbum">
+  <a href="#portada" class="punto activo" data-target="portada"><span>Portada</span></a>
+  <a href="#galeria" class="punto" data-target="galeria"><span>Galería</span></a>
+  <a href="#cancion" class="punto" data-target="cancion"><span>Canción</span></a>
+  <a href="#cartas" class="punto" data-target="cartas"><span>Cartas</span></a>
+</nav>
+
+<!-- Control de sonido -->
+<button id="botonSonido" class="boton-sonido" aria-label="Silenciar música">
+  <svg id="iconoSonidoOn" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-.77-3.29-2-4.24v8.48c1.23-.95 2-2.47 2-4.24z"/><path d="M14.5 4.97v2.06c2.89 1.04 5 3.77 5 6.97s-2.11 5.93-5 6.97v2.06c4-1.09 7-4.7 7-9.03s-3-7.94-7-9.03z"/></svg>
+  <svg id="iconoSonidoOff" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M19 12l3-3-1.4-1.4L17.6 10.6 15.2 8.2 13.8 9.6 16.2 12l-2.4 2.4 1.4 1.4 2.4-2.4 2.4 2.4L21 15z"/></svg>
+</button>
+
+<!-- ==========================================
+     PORTADA
+=========================================== -->
+<header id="portada" class="seccion portada">
+  <svg class="marca-agua marca-agua--izq" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+  <svg class="marca-agua marca-agua--der" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+  <svg class="chispa chispa--1" viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+  <svg class="chispa chispa--2" viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+  <svg class="chispa chispa--3" viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+
+  <div class="portada-contenido">
+    <p class="eyebrow reveal">Un álbum para</p>
+    <h1 class="nombre reveal">cami</h1>
+    <div class="linea-divisora reveal"><svg viewBox="0 0 100 140" class="lirio-mini"><use href="#lirio"/></svg></div>
+    <p class="subtitulo reveal">Cada foto, cada canción y cada carta de esta página<br>guarda un pedacito de lo que siento por ti.</p>
+
+    <button id="abrirAlbum" class="boton-principal reveal">
+      <span>Abrir nuestro álbum</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <span></span>
+  </div>
+</header>
+
+<main id="contenido">
+
   <!-- ==========================================
-       SVG SPRITE: lirio de línea fina (motivo reutilizable)
+       GALERÍA
   =========================================== -->
-  <svg width="0" height="0" style="position:absolute">
-    <defs>
-      <symbol id="lirio" viewBox="0 0 100 140">
-        <path d="M50 140 C 50 100 45 90 50 70" fill="none" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M50 70 C 20 65 8 40 15 10 C 35 15 48 30 50 55 C 52 30 65 15 85 10 C 92 40 80 65 50 70Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M50 55 C 46 35 38 22 25 15" fill="none" stroke="currentColor" stroke-width="1"/>
-        <path d="M50 55 C 54 35 62 22 75 15" fill="none" stroke="currentColor" stroke-width="1"/>
-      </symbol>
-      <symbol id="petalo" viewBox="0 0 60 60">
-        <path d="M30 2 C 45 15 45 45 30 58 C 15 45 15 15 30 2Z" fill="currentColor"/>
-      </symbol>
-    </defs>
-  </svg>
-
-  <!-- Fondo con degradado azul + pétalos flotantes -->
-  <div class="fondo"></div>
-  <div id="petalos" class="petalos" aria-hidden="true"></div>
-
-  <!-- Música -->
-  <audio id="musica" src="musica.mp3" loop preload="metadata"></audio>
-
-  <!-- Navegación por puntos (desktop) -->
-  <nav class="nav-puntos" aria-label="Secciones del álbum">
-    <a href="#portada" class="punto activo" data-target="portada" aria-label="Portada"></a>
-    <a href="#galeria" class="punto" data-target="galeria" aria-label="Galería"></a>
-    <a href="#cancion" class="punto" data-target="cancion" aria-label="Nuestra canción"></a>
-    <a href="#cartas" class="punto" data-target="cartas" aria-label="Cartas"></a>
-  </nav>
-
-  <!-- ==========================================
-       PORTADA
-  =========================================== -->
-  <header id="portada" class="seccion portada">
-    <svg class="marca-agua marca-agua--izq" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-    <svg class="marca-agua marca-agua--der" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-
-    <div class="portada-contenido">
-      <p class="eyebrow">Un álbum para</p>
-      <h1 class="nombre">Camiwita</h1>
-      <div class="linea-divisora"><svg viewBox="0 0 100 140" class="lirio-mini"><use href="#lirio"/></svg></div>
-      <p class="subtitulo">Cada foto, cada canción y cada carta de esta página<br>guarda un pedacito de lo que siento por ti.</p>
-
-      <button id="abrirAlbum" class="boton-principal">
-        <span>Abrir nuestro álbum</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+  <section id="galeria" class="seccion galeria">
+    <div class="encabezado-seccion reveal">
+      <span class="eyebrow">Galería</span>
+      <h2>Nuestros momentos de amor</h2>
+      <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
     </div>
 
-    <div class="scroll-hint" aria-hidden="true">
-      <span></span>
+    <div class="grid-fotos">
+
+      <figure class="foto reveal" data-titulo="Nuestra historia de amor" data-texto="El bello amor que comenzo de algo inesperado.">
+        <div class="foto-marco"><img src="img/foto1.jpeg" alt="Nuestro primer viaje" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Nuestra historia de amor</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Un día que no olvido" data-texto="De todos los días del calendario, este se quedó a vivir en mi memoria.">
+        <div class="foto-marco"><img src="img/foto2.jpeg" alt="Un día que no olvido" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Un día que no olvido</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Siempre juntos" data-texto="No importa el lugar del mapa: contigo, ya estoy en casa.">
+        <div class="foto-marco"><img src="img/foto3.jpeg" alt="Siempre juntos" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Siempre juntos</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Mi lugar favorito" data-texto="He visto varios lugares lindos, pero mi favorito sigues siendo tú.">
+        <div class="foto-marco"><img src="img/foto4.jpeg" alt="Mi lugar favorito eres tú" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Mi lugar favorito eres tú</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Un día perfecto" data-texto="Nada extraordinario pasó ese día, solo que estabas tú, y eso bastó.">
+        <div class="foto-marco"><img src="img/foto5.jpeg" alt="Un día perfecto" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Un día perfecto</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Gracias por existir" data-texto="Hay personas que suman, y luego estás tú, que lo cambiaste todo.">
+        <div class="foto-marco"><img src="img/foto6.jpeg" alt="Gracias por existir" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Gracias por existir</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Más recuerdos por venir" data-texto="Esta página apenas empieza; prometo llenarla contigo.">
+        <div class="foto-marco"><img src="img/foto7.jpeg" alt="Más recuerdos por venir" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Más recuerdos por venir</figcaption>
+      </figure>
+
+      <figure class="foto reveal" data-titulo="Te amo" data-texto="Así, simple y directo, como lo siento cada día.">
+        <div class="foto-marco"><img src="img/foto8.jpeg" alt="Te amo" loading="lazy" onerror="this.closest('.foto').classList.add('sin-imagen')"></div>
+        <figcaption>Te amo</figcaption>
+      </figure>
+
     </div>
-  </header>
+  </section>
 
-  <main id="contenido">
+  <!-- ==========================================
+       NUESTRA CANCIÓN
+  =========================================== -->
+  <section id="cancion" class="seccion cancion">
+    <div class="cancion-estrellas" aria-hidden="true"></div>
+    <svg class="marca-agua marca-agua--der marca-agua--tenue" viewBox="0 0 100 140"><use href="#lirio"/></svg>
 
-    <!-- ==========================================
-         GALERÍA
-    =========================================== -->
-    <section id="galeria" class="seccion galeria">
-      <div class="encabezado-seccion">
-        <span class="eyebrow">Galería</span>
-        <h2>Nuestros momentos de amor</h2>
-        <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-      </div>
+    <div class="encabezado-seccion reveal">
+      <span class="eyebrow">Nuestra canción</span>
+      <h2>La que nos sabemos de memoria</h2>
+      <svg class="lirio-divisor lirio-divisor--claro" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+    </div>
 
-      <div class="grid-fotos">
-
-        <figure class="foto" data-titulo="Nuestra historia de amor" data-texto="El bello amor que comenzo de algo inesperado.">
-          <img src="img/foto1.jpeg" alt="Nuestro primer viaje" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Nuestro historia de amor</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Un día que no olvido" data-texto="De todos los días del calendario, este se quedó a vivir en mi memoria.">
-          <img src="img/foto2.jpeg" alt="Un día que no olvido" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Un día que no olvido</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Siempre juntos" data-texto="No importa el lugar del mapa: contigo, ya estoy en casa.">
-          <img src="img/foto3.jpeg" alt="Siempre juntos" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Siempre juntos</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Mi lugar favorito" data-texto="He visto varios lugares lindos, pero mi favorito sigues siendo tú.">
-          <img src="img/foto4.jpeg" alt="Mi lugar favorito eres tú" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Mi lugar favorito eres tú</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Un día perfecto" data-texto="Nada extraordinario pasó ese día, solo que estabas tú, y eso bastó.">
-          <img src="img/foto5.jpeg" alt="Un día perfecto" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Un día perfecto</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Gracias por existir" data-texto="Hay personas que suman, y luego estás tú, que lo cambiaste todo.">
-          <img src="img/foto6.jpeg" alt="Gracias por existir" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Gracias por existir</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Más recuerdos por venir" data-texto="Esta página apenas empieza; prometo llenarla contigo.">
-          <img src="img/foto7.jpeg" alt="Más recuerdos por venir" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Más recuerdos por venir</figcaption>
-        </figure>
-
-        <figure class="foto" data-titulo="Te amo" data-texto="Así, simple y directo, como lo siento cada día." >
-          <img src="img/foto8.jpeg" alt="Te amo" onerror="this.closest('.foto').classList.add('sin-imagen')">
-          <figcaption>Te amo</figcaption>
-        </figure>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         NUESTRA CANCIÓN
-    =========================================== -->
-    <section id="cancion" class="seccion cancion">
-      <svg class="marca-agua marca-agua--der marca-agua--tenue" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-
-      <div class="encabezado-seccion">
-        <span class="eyebrow">Nuestra canción</span>
-        <h2>La que nos sabemos de memoria</h2>
-        <svg class="lirio-divisor lirio-divisor--claro" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-      </div>
-
-      <div class="reproductor">
+    <div class="reproductor reveal">
+      <div class="disco-envoltorio">
         <div class="disco" id="disco">
+          <div class="disco-brillo"></div>
           <div class="disco-centro"></div>
         </div>
+      </div>
 
-        <div class="reproductor-info">
-          <p class="cancion-titulo" id="cancionTitulo">Nuestra canción especial</p>
-          <p class="cancion-autor" id="cancionAutor">Para camiwis</p>
+      <div class="reproductor-info">
+        <p class="cancion-titulo" id="cancionTitulo">Nuestra canción especial</p>
+        <p class="cancion-autor" id="cancionAutor">Para camiwis</p>
 
-          <div class="controles">
-            <button id="playPause" class="boton-play" aria-label="Reproducir">
-              <svg id="iconoPlay" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              <svg id="iconoPausa" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-            </button>
+        <div class="controles">
+          <button id="playPause" class="boton-play" aria-label="Reproducir">
+            <svg id="iconoPlay" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="iconoPausa" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
 
-            <div class="barra-tiempo">
-              <span id="tiempoActual">0:00</span>
-              <div class="barra-progreso" id="barraProgreso">
-                <div class="barra-progreso-relleno" id="barraRelleno"></div>
+          <div class="barra-tiempo">
+            <span id="tiempoActual">0:00</span>
+            <div class="barra-progreso" id="barraProgreso">
+              <div class="barra-progreso-relleno" id="barraRelleno">
+                <div class="barra-progreso-pulso" id="barraPulso"></div>
               </div>
-              <span id="tiempoTotal">0:00</span>
             </div>
-          </div>
-
-          <div class="ecualizador" id="ecualizador" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span>
+            <span id="tiempoTotal">0:00</span>
           </div>
         </div>
+
+        <div class="ecualizador" id="ecualizador" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ==========================================
-         CARTAS
-    =========================================== -->
-    <section id="cartas" class="seccion cartas">
-      <div class="encabezado-seccion">
-        <span class="eyebrow">Cartas para ti</span>
-        <h2>Lo que no siempre digo en voz alta</h2>
-        <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-      </div>
-
-      <div class="grid-cartas">
-
-        <article class="carta" data-carta="1">
-          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
-          <h3>Sobre nosotros</h3>
-          <p class="carta-preview">Para cuando quieras recordar por qué elegí quedarme...</p>
-          <span class="carta-boton">Leer carta</span>
-        </article>
-
-        <article class="carta" data-carta="2">
-          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
-          <h3>Gracias</h3>
-          <p class="carta-preview">Hay cosas pequeñas tuyas que quiero agradecerte...</p>
-          <span class="carta-boton">Leer carta</span>
-        </article>
-
-        <article class="carta" data-carta="3">
-          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
-          <h3>Lo que viene</h3>
-          <p class="carta-preview">De todo lo que quiero construir contigo...</p>
-          <span class="carta-boton">Leer carta</span>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         FIRMA FINAL
-    =========================================== -->
-    <footer class="firma">
+  <!-- ==========================================
+       CARTAS
+  =========================================== -->
+  <section id="cartas" class="seccion cartas">
+    <div class="encabezado-seccion reveal">
+      <span class="eyebrow">Cartas para ti</span>
+      <h2>Lo que no siempre digo en voz alta</h2>
       <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-      <p class="firma-texto">Hecho con todo mi cariño, para ti.</p>
-      <p class="firma-nombre">Mi amor camila</p>
-    </footer>
+    </div>
 
-  </main>
+    <div class="grid-cartas">
+
+      <article class="carta reveal" data-carta="1">
+        <div class="carta-cinta"></div>
+        <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+        <h3>Sobre nosotros</h3>
+        <p class="carta-preview">Para cuando quieras recordar por qué elegí quedarme...</p>
+        <span class="carta-boton">Leer carta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </article>
+
+      <article class="carta reveal" data-carta="2">
+        <div class="carta-cinta"></div>
+        <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+        <h3>Gracias</h3>
+        <p class="carta-preview">Hay cosas pequeñas tuyas que quiero agradecerte...</p>
+        <span class="carta-boton">Leer carta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </article>
+
+      <article class="carta reveal" data-carta="3">
+        <div class="carta-cinta"></div>
+        <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+        <h3>Lo que viene</h3>
+        <p class="carta-preview">De todo lo que quiero construir contigo...</p>
+        <span class="carta-boton">Leer carta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </article>
+
+    </div>
+  </section>
 
   <!-- ==========================================
-       VISOR DE FOTOS
+       FIRMA FINAL
   =========================================== -->
-  <div id="visorFoto" class="visor" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="visor-caja">
-      <button id="cerrarVisorFoto" class="visor-cerrar" aria-label="Cerrar">✕</button>
+  <footer class="firma">
+    <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+    <p class="firma-texto">Hecho con todo mi cariño, para ti.</p>
+    <p class="firma-nombre">Mi amor camila</p>
+    <div class="firma-chispas" aria-hidden="true">
+      <svg viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+      <svg viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+      <svg viewBox="0 0 40 40"><use href="#estrella4"/></svg>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ==========================================
+     VISOR DE FOTOS
+=========================================== -->
+<div id="visorFoto" class="visor" role="dialog" aria-modal="true" aria-hidden="true">
+  <button id="fotoAnterior" class="visor-flecha visor-flecha--izq" aria-label="Foto anterior">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="visor-caja">
+    <button id="cerrarVisorFoto" class="visor-cerrar" aria-label="Cerrar">✕</button>
+    <div class="visor-imagen-marco">
       <img id="visorImagen" src="" alt="Foto ampliada">
-      <h3 id="visorTitulo"></h3>
-      <p id="visorTexto"></p>
     </div>
+    <h3 id="visorTitulo"></h3>
+    <p id="visorTexto"></p>
+    <span class="visor-contador" id="visorContador"></span>
   </div>
+  <button id="fotoSiguiente" class="visor-flecha visor-flecha--der" aria-label="Foto siguiente">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
 
-  <!-- ==========================================
-       VISOR DE CARTAS
-  =========================================== -->
-  <div id="visorCarta" class="visor visor-carta" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="visor-caja carta-caja">
-      <button id="cerrarVisorCarta" class="visor-cerrar" aria-label="Cerrar">✕</button>
-      <svg class="carta-caja-lirio" viewBox="0 0 100 140"><use href="#lirio"/></svg>
-      <h3 id="cartaTituloGrande"></h3>
-      <div id="cartaCuerpo" class="carta-cuerpo"></div>
-      <p class="carta-firma">Con amor.</p>
-    </div>
+<!-- ==========================================
+     VISOR DE CARTAS
+=========================================== -->
+<div id="visorCarta" class="visor visor-carta" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="visor-caja carta-caja">
+    <button id="cerrarVisorCarta" class="visor-cerrar" aria-label="Cerrar">✕</button>
+    <svg class="carta-caja-lirio" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+    <h3 id="cartaTituloGrande"></h3>
+    <div id="cartaCuerpo" class="carta-cuerpo"></div>
+    <p class="carta-firma">Con amor.</p>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
