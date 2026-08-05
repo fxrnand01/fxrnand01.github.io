@@ -1,217 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Nuestra Historia</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para el amor de mi vida</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@500;600&family=Caveat:wght@500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Fondo nocturno con estrellas y lirios flotando -->
-<div class="night-sky" id="nightSky" aria-hidden="true"></div>
-
-<header class="scene-title">
-  <p class="eyebrow">un libro para</p>
-  <h1 id="coverNameDisplay">Camila</h1>
-</header>
-
-<audio id="bgMusic" src="musica.mp3" loop preload="auto"></audio>
-<button class="music-toggle" id="musicToggle" aria-label="Reproducir música" title="Música">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
-    <path d="M9 18V5l12-2v13"/>
-    <circle cx="6" cy="18" r="3"/>
-    <circle cx="18" cy="16" r="3"/>
+  <!-- ==========================================
+       SVG SPRITE: lirio de línea fina (motivo reutilizable)
+  =========================================== -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <symbol id="lirio" viewBox="0 0 100 140">
+        <path d="M50 140 C 50 100 45 90 50 70" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M50 70 C 20 65 8 40 15 10 C 35 15 48 30 50 55 C 52 30 65 15 85 10 C 92 40 80 65 50 70Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M50 55 C 46 35 38 22 25 15" fill="none" stroke="currentColor" stroke-width="1"/>
+        <path d="M50 55 C 54 35 62 22 75 15" fill="none" stroke="currentColor" stroke-width="1"/>
+      </symbol>
+      <symbol id="petalo" viewBox="0 0 60 60">
+        <path d="M30 2 C 45 15 45 45 30 58 C 15 45 15 15 30 2Z" fill="currentColor"/>
+      </symbol>
+    </defs>
   </svg>
-</button>
 
-<div class="toast" id="toast"></div>
+  <!-- Fondo con degradado azul + pétalos flotantes -->
+  <div class="fondo"></div>
+  <div id="petalos" class="petalos" aria-hidden="true"></div>
 
-<main class="stage">
+  <!-- Música -->
+  <audio id="musica" src="musica.mp3" loop preload="metadata"></audio>
 
-  <div class="book-wrapper" id="bookWrapper">
-    <div class="book" id="book">
+  <!-- Navegación por puntos (desktop) -->
+  <nav class="nav-puntos" aria-label="Secciones del álbum">
+    <a href="#portada" class="punto activo" data-target="portada" aria-label="Portada"></a>
+    <a href="#galeria" class="punto" data-target="galeria" aria-label="Galería"></a>
+    <a href="#cancion" class="punto" data-target="cancion" aria-label="Nuestra canción"></a>
+    <a href="#cartas" class="punto" data-target="cartas" aria-label="Cartas"></a>
+  </nav>
 
-      <!-- Tapa trasera fija (fondo del libro) -->
-      <div class="back-board"></div>
+  <!-- ==========================================
+       PORTADA
+  =========================================== -->
+  <header id="portada" class="seccion portada">
+    <svg class="marca-agua marca-agua--izq" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+    <svg class="marca-agua marca-agua--der" viewBox="0 0 100 140"><use href="#lirio"/></svg>
 
-      <!-- Contenedor de hojas, se llena dinámicamente por script.js -->
-      <div class="leaves" id="leaves"></div>
+    <div class="portada-contenido">
+      <p class="eyebrow">Un álbum para</p>
+      <h1 class="nombre">Camiwita</h1>
+      <div class="linea-divisora"><svg viewBox="0 0 100 140" class="lirio-mini"><use href="#lirio"/></svg></div>
+      <p class="subtitulo">Cada foto, cada canción y cada carta de esta página<br>guarda un pedacito de lo que siento por ti.</p>
 
-      <!-- Portada (tapa frontal) -->
-      <div class="cover" id="cover">
-        <div class="cover-face cover-front">
-          <div class="cover-frame">
-            <svg class="cover-lily" viewBox="0 0 200 260" aria-hidden="true">
-              <use href="#lilyMotif"></use>
-            </svg>
-            <p class="cover-eyebrow" id="coverEyebrow">nuestra historia</p>
-            <h2 class="cover-title" id="coverTitle">Nuestra<br>Historia</h2>
-            <p class="cover-sub" id="coverSub">Camila &amp; T&uacute;</p>
-            <span class="cover-hint">toca para abrir</span>
+      <button id="abrirAlbum" class="boton-principal">
+        <span>Abrir nuestro álbum</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- ==========================================
+         GALERÍA
+    =========================================== -->
+    <section id="galeria" class="seccion galeria">
+      <div class="encabezado-seccion">
+        <span class="eyebrow">Galería</span>
+        <h2>Nuestros momentos de amor</h2>
+        <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+      </div>
+
+      <div class="grid-fotos">
+
+        <figure class="foto" data-titulo="Nuestra historia de amor" data-texto="El bello amor que comenzo de algo inesperado.">
+          <img src="img/foto1.jpeg" alt="Nuestro primer viaje" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Nuestro historia de amor</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Un día que no olvido" data-texto="De todos los días del calendario, este se quedó a vivir en mi memoria.">
+          <img src="img/foto2.jpeg" alt="Un día que no olvido" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Un día que no olvido</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Siempre juntos" data-texto="No importa el lugar del mapa: contigo, ya estoy en casa.">
+          <img src="img/foto3.jpeg" alt="Siempre juntos" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Siempre juntos</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Mi lugar favorito" data-texto="He visto varios lugares lindos, pero mi favorito sigues siendo tú.">
+          <img src="img/foto4.jpeg" alt="Mi lugar favorito eres tú" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Mi lugar favorito eres tú</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Un día perfecto" data-texto="Nada extraordinario pasó ese día, solo que estabas tú, y eso bastó.">
+          <img src="img/foto5.jpeg" alt="Un día perfecto" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Un día perfecto</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Gracias por existir" data-texto="Hay personas que suman, y luego estás tú, que lo cambiaste todo.">
+          <img src="img/foto6.jpeg" alt="Gracias por existir" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Gracias por existir</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Más recuerdos por venir" data-texto="Esta página apenas empieza; prometo llenarla contigo.">
+          <img src="img/foto7.jpeg" alt="Más recuerdos por venir" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Más recuerdos por venir</figcaption>
+        </figure>
+
+        <figure class="foto" data-titulo="Te amo" data-texto="Así, simple y directo, como lo siento cada día." >
+          <img src="img/foto8.jpeg" alt="Te amo" onerror="this.closest('.foto').classList.add('sin-imagen')">
+          <figcaption>Te amo</figcaption>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         NUESTRA CANCIÓN
+    =========================================== -->
+    <section id="cancion" class="seccion cancion">
+      <svg class="marca-agua marca-agua--der marca-agua--tenue" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+
+      <div class="encabezado-seccion">
+        <span class="eyebrow">Nuestra canción</span>
+        <h2>La que nos sabemos de memoria</h2>
+        <svg class="lirio-divisor lirio-divisor--claro" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+      </div>
+
+      <div class="reproductor">
+        <div class="disco" id="disco">
+          <div class="disco-centro"></div>
+        </div>
+
+        <div class="reproductor-info">
+          <p class="cancion-titulo" id="cancionTitulo">Nuestra canción especial</p>
+          <p class="cancion-autor" id="cancionAutor">Para camiwis</p>
+
+          <div class="controles">
+            <button id="playPause" class="boton-play" aria-label="Reproducir">
+              <svg id="iconoPlay" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <svg id="iconoPausa" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+
+            <div class="barra-tiempo">
+              <span id="tiempoActual">0:00</span>
+              <div class="barra-progreso" id="barraProgreso">
+                <div class="barra-progreso-relleno" id="barraRelleno"></div>
+              </div>
+              <span id="tiempoTotal">0:00</span>
+            </div>
+          </div>
+
+          <div class="ecualizador" id="ecualizador" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
           </div>
         </div>
-        <div class="cover-face cover-back"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CARTAS
+    =========================================== -->
+    <section id="cartas" class="seccion cartas">
+      <div class="encabezado-seccion">
+        <span class="eyebrow">Cartas para ti</span>
+        <h2>Lo que no siempre digo en voz alta</h2>
+        <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
       </div>
 
-    </div>
+      <div class="grid-cartas">
 
-    <!-- Controles de navegación -->
-    <button class="nav-btn prev" id="prevBtn" aria-label="Página anterior">&#10094;</button>
-    <button class="nav-btn next" id="nextBtn" aria-label="Página siguiente">&#10095;</button>
-  </div>
+        <article class="carta" data-carta="1">
+          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+          <h3>Sobre nosotros</h3>
+          <p class="carta-preview">Para cuando quieras recordar por qué elegí quedarme...</p>
+          <span class="carta-boton">Leer carta</span>
+        </article>
 
-  <div class="page-indicator" id="pageIndicator"></div>
+        <article class="carta" data-carta="2">
+          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+          <h3>Gracias</h3>
+          <p class="carta-preview">Hay cosas pequeñas tuyas que quiero agradecerte...</p>
+          <span class="carta-boton">Leer carta</span>
+        </article>
 
-</main>
+        <article class="carta" data-carta="3">
+          <div class="carta-sello"><svg width="26" height="26" viewBox="0 0 100 140"><use href="#lirio"/></svg></div>
+          <h3>Lo que viene</h3>
+          <p class="carta-preview">De todo lo que quiero construir contigo...</p>
+          <span class="carta-boton">Leer carta</span>
+        </article>
 
-<!-- Botón discreto para modo edición -->
-<button class="admin-toggle" id="adminToggle" title="Editar libro" aria-label="Editar libro">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
-    <path d="M12 20h9"/>
-    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-  </svg>
-  <span>Editar recuerdos</span>
-</button>
-
-<!-- Panel / modal de edición -->
-<div class="admin-modal" id="adminModal" aria-hidden="true">
-  <div class="admin-panel">
-    <button class="admin-close" id="adminClose" aria-label="Cerrar">&times;</button>
-    <p class="admin-eyebrow">panel privado</p>
-    <h3>Agregar un recuerdo</h3>
-
-    <div class="admin-tabs">
-      <button class="tab-btn active" data-tab="photo">Foto</button>
-      <button class="tab-btn" data-tab="note">Nota</button>
-      <button class="tab-btn" data-tab="text">Textos</button>
-    </div>
-
-    <form id="photoForm" class="admin-form">
-      <label class="field-label">Desde tu dispositivo</label>
-      <input type="file" id="photoFile" accept="image/*">
-
-      <label class="field-label">o pega una URL de imagen</label>
-      <input type="url" id="photoUrl" placeholder="https://...">
-
-      <label class="field-label">Nota para la foto (opcional)</label>
-      <input type="text" id="photoCaption" placeholder="Ese día en la playa...">
-
-      <label class="field-label">Fecha (opcional)</label>
-      <input type="text" id="photoDate" placeholder="14 de febrero, 2024">
-
-      <p class="edit-hint hidden" id="photoEditHint">Editando una foto existente — deja el archivo/URL vacíos para conservar la imagen actual.</p>
-      <button type="submit" class="admin-submit" id="photoSubmitBtn">Agregar página con esta foto</button>
-      <button type="button" class="admin-cancel hidden" id="photoCancelBtn">Cancelar edición</button>
-    </form>
-
-    <form id="noteForm" class="admin-form hidden">
-      <label class="field-label">Escribe tu recuerdo o pensamiento</label>
-      <textarea id="noteText" rows="6" placeholder="Quiero que sepas que..."></textarea>
-
-      <label class="field-label">Fecha o firma (opcional)</label>
-      <input type="text" id="noteDate" placeholder="Con todo mi cariño, ...">
-
-      <button type="submit" class="admin-submit" id="noteSubmitBtn">Agregar página de dedicatoria</button>
-      <button type="button" class="admin-cancel hidden" id="noteCancelBtn">Cancelar edición</button>
-    </form>
-
-    <form id="textForm" class="admin-form hidden">
-      <label class="field-label">Nombre en el encabezado</label>
-      <input type="text" id="txtHeaderName" placeholder="Camila">
-
-      <label class="field-label">Título de la portada</label>
-      <input type="text" id="txtCoverTitle" placeholder="Nuestra Historia">
-
-      <label class="field-label">Subtítulo de la portada</label>
-      <input type="text" id="txtCoverSub" placeholder="Camila &amp; Tú">
-
-      <label class="field-label">Título de bienvenida</label>
-      <input type="text" id="txtWelcomeTitle" placeholder="Hola, mi amor">
-
-      <label class="field-label">Mensaje de bienvenida</label>
-      <textarea id="txtWelcomeMsg" rows="4" placeholder="Este libro guarda..."></textarea>
-
-      <label class="field-label">Firma de bienvenida</label>
-      <input type="text" id="txtWelcomeSign" placeholder="Te quiero, hoy y siempre.">
-
-      <label class="field-label">Título de la dedicatoria principal</label>
-      <input type="text" id="txtDedicTitle" placeholder="Para ti">
-
-      <label class="field-label">Texto de la dedicatoria principal</label>
-      <textarea id="txtDedicMsg" rows="4" placeholder="Cada página de este libro..."></textarea>
-
-      <label class="field-label">Mensaje de la contraportada</label>
-      <textarea id="txtBackMsg" rows="3" placeholder="Esta historia sigue..."></textarea>
-
-      <button type="submit" class="admin-submit">Guardar textos</button>
-    </form>
-
-    <div class="admin-backup">
-      <p class="admin-eyebrow" style="margin-top:1.4rem;">respaldo</p>
-      <p class="backup-hint">Si tu navegador borra los datos guardados al reiniciar, descarga un respaldo y luego impórtalo cuando quieras recuperarlo.</p>
-      <div class="backup-actions">
-        <button type="button" class="backup-btn" id="exportBtn">Descargar respaldo</button>
-        <label class="backup-btn backup-import-label">
-          Importar respaldo
-          <input type="file" id="importInput" accept="application/json" hidden>
-        </label>
       </div>
-    </div>
+    </section>
 
-    <div class="admin-list" id="adminList">
-      <p class="admin-eyebrow" style="margin-top:1.5rem;">recuerdos agregados</p>
-      <ul id="adminListItems"></ul>
+    <!-- ==========================================
+         FIRMA FINAL
+    =========================================== -->
+    <footer class="firma">
+      <svg class="lirio-divisor" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+      <p class="firma-texto">Hecho con todo mi cariño, para ti.</p>
+      <p class="firma-nombre">Mi amor camila</p>
+    </footer>
+
+  </main>
+
+  <!-- ==========================================
+       VISOR DE FOTOS
+  =========================================== -->
+  <div id="visorFoto" class="visor" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="visor-caja">
+      <button id="cerrarVisorFoto" class="visor-cerrar" aria-label="Cerrar">✕</button>
+      <img id="visorImagen" src="" alt="Foto ampliada">
+      <h3 id="visorTitulo"></h3>
+      <p id="visorTexto"></p>
     </div>
   </div>
-</div>
 
-<!-- Motivo de lirio reutilizable (SVG sprite oculto) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f4e2b8"/>
-      <stop offset="50%" stop-color="#c9a44c"/>
-      <stop offset="100%" stop-color="#8a6d2f"/>
-    </linearGradient>
-    <symbol id="lilyMotif" viewBox="0 0 200 260">
-      <g fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M100 250 C100 190 92 150 78 120"/>
-        <path d="M100 250 C100 190 108 150 122 120"/>
-        <path d="M100 190 C80 190 60 178 55 158"/>
-        <path d="M100 190 C120 190 140 178 145 158"/>
-        <path d="M100 120 C60 105 45 65 55 20 C70 45 78 55 100 70 C122 55 130 45 145 20 C155 65 140 105 100 120Z"/>
-        <path d="M100 70 L100 118" stroke-width="1.4"/>
-        <path d="M78 45 C90 58 110 58 122 45" stroke-width="1.4"/>
-        <circle cx="88" cy="52" r="2.4" fill="url(#goldGrad)" stroke="none"/>
-        <circle cx="112" cy="52" r="2.4" fill="url(#goldGrad)" stroke="none"/>
-        <circle cx="100" cy="60" r="2.4" fill="url(#goldGrad)" stroke="none"/>
-      </g>
-    </symbol>
-    <symbol id="teddyMotif" viewBox="0 0 200 200">
-      <g fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="70" cy="55" r="16"/>
-        <circle cx="130" cy="55" r="16"/>
-        <circle cx="100" cy="95" r="42"/>
-        <circle cx="80" cy="88" r="6" fill="url(#goldGrad)" stroke="none"/>
-        <circle cx="120" cy="88" r="6" fill="url(#goldGrad)" stroke="none"/>
-        <path d="M92 108 q8 8 16 0" />
-        <ellipse cx="100" cy="100" rx="10" ry="7"/>
-        <circle cx="55" cy="140" r="18"/>
-        <circle cx="145" cy="140" r="18"/>
-        <circle cx="75" cy="172" r="16"/>
-        <circle cx="125" cy="172" r="16"/>
-        <path d="M60 118 q40 30 80 0" />
-      </g>
-    </symbol>
-  </defs>
-</svg>
+  <!-- ==========================================
+       VISOR DE CARTAS
+  =========================================== -->
+  <div id="visorCarta" class="visor visor-carta" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="visor-caja carta-caja">
+      <button id="cerrarVisorCarta" class="visor-cerrar" aria-label="Cerrar">✕</button>
+      <svg class="carta-caja-lirio" viewBox="0 0 100 140"><use href="#lirio"/></svg>
+      <h3 id="cartaTituloGrande"></h3>
+      <div id="cartaCuerpo" class="carta-cuerpo"></div>
+      <p class="carta-firma">Con amor.</p>
+    </div>
+  </div>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
